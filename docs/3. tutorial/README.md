@@ -109,13 +109,13 @@ Group 2층 - Subject C, D
 
 |Category|Contents|
 |---|---|
-|Request| curl --location <br> --request GET 'https://apis.openapi.sk.com/nugufacecan/v1/subject' <br> --header 'appKey: l7xx4bfa60c6bc8945819a114c5e34cc930c' <br> --header 'app_id: GZ0E4G4YI1' <br> --header 'group-id: VOFLIDEYD6' |
+|Request| curl --location <br> --request GET 'https://apis.openapi.sk.com/nugufacecan/v1/subject' <br> --header 'appKey: l7xx4bfa60c6bc8945819a114c5e34cc930c' <br> --header 'app-id: GZ0E4G4YI1' <br> --header 'group-id: VOFLIDEYD6' |
 |Response| 200 OK <pre>{<br>  {<br>    “subject_id”: “8YLHWXT0K0”,<br>     "group_name”: “1st-floor”,<br>    “subject_name”: “A”,<br>  }, <br>  {<br>    "subject_id": "M0N69EP2VJ",<br>    "group_name": "1st-floor", <br>    "subject_name": "B"<br>   }<br>} </pre> |
 
 
 |Category|Contents|
 |---|---|
-|Request| curl --location <br> --request GET 'https://apis.openapi.sk.com/nugufacecan/v1/subject' <br> --header 'appKey: l7xx4bfa60c6bc8945819a114c5e34cc930c' <br> --header 'app_id: GZ0E4G4YI1' <br> --header 'group-id: 80NOKFZPAL'' |
+|Request| curl --location <br> --request GET 'https://apis.openapi.sk.com/nugufacecan/v1/subject' <br> --header 'appKey: l7xx4bfa60c6bc8945819a114c5e34cc930c' <br> --header 'app-id: GZ0E4G4YI1' <br> --header 'group-id: 80NOKFZPAL'' |
 |Response| 200 OK <pre>{<br>  {<br>    “subject_id”: “2GEMZVDYE4”,<br>     "group_name”: “2nd-floor”,<br>    “subject_name”: “C”,<br>  }, <br>  {<br>    "subject_id": "YN5V8SG213",<br>    "group_name": "2nd-floor", <br>    "subject_name": "D"<br>   }<br>} </pre> |
 
 <br>
@@ -130,7 +130,7 @@ Face 역시 마찬가지로 group-id, subject-id를 header 로 넣고, face_name
 
 |Category|Contents|
 |---|---|
-|Request| curl --location <br>--request POST 'https://apis.openapi.sk.com/nugufacecan/v1/face' <br>--header 'appKey: l7xx4bfa60c6bc8945819a114c5e34cc930c' <br> --header 'app_id: GZ0E4G4YI1' <br> --header 'group-id: VOFLIDEYD6' <br>--header 'subject-id: 8YLHWXT0K0 <br> --header 'face-name: A_face' <br> --form 'image=@"A_face_1.jpg"' |
+|Request| curl --location <br>--request POST 'https://apis.openapi.sk.com/nugufacecan/v1/face' <br>--header 'appKey: l7xx4bfa60c6bc8945819a114c5e34cc930c' <br> --header 'app-id: GZ0E4G4YI1' <br> --header 'group-id: VOFLIDEYD6' <br>--header 'subject-id: 8YLHWXT0K0 <br> --header 'face-name: A_face' <br> --form 'image=@"A_face_1.jpg"' |
 |Response| 200 OK |
 
 <br>
@@ -141,7 +141,7 @@ Face 역시 Group/Subject 와 같이 GET 으로 호출하면, 얼굴 데이터�
 
 |Category|Contents|
 |---|---|
-|Request| curl --location <br>--request GET 'https://apis.openapi.sk.com/nugufacecan/v1/face' <br>--header 'appKey: l7xx4bfa60c6bc8945819a114c5e34cc930c' <br>--header 'app_id: GZ0E4G4YI1' <br>--header 'group-id: VOFLIDEYD6' <br> --header 'subject-id: 8YLHWXT0K0' |
+|Request| curl --location <br>--request GET 'https://apis.openapi.sk.com/nugufacecan/v1/face' <br>--header 'appKey: l7xx4bfa60c6bc8945819a114c5e34cc930c' <br>--header 'app-id: GZ0E4G4YI1' <br>--header 'group-id: VOFLIDEYD6' <br> --header 'subject-id: 8YLHWXT0K0' |
 |Response| 200 OK <pre>[<br>  {<br>    "face_id": "AIF2SGCB9R",<br>    "face_name": "A",<br>    "box": {<br>      "landmark": [<br>        315.33056640625,<br>        395.97271728515625,<br>        509.1438293457031,<br>        382.5447692871094,<br>        402.6089172363281,<br>        496.8799133300781,<br>        341.49383544921875,<br>        597.4930419921875,<br>        504.7567138671875,<br>        585.8673706054688<br>      ],<br>      "topLeftX": 215,<br>      "topLeftY": 181,<br>      "faceWidth": 436,<br>      "faceHeight": 561<br>    },<br>    "face_score": 1.0,<br>    "expression": "smile",<br>    "expression_score": 0.932392954826355,<br>    "age": 25,<br>    "gender": "female", <br>    "attribute": "normal",<br>    "image_width": 900,<br>    "image_height": 1350,<br>    "engine_version": 390<br>  },<br>  {<br>    "face_id": "IQA498UJYO",<br>    "face_name": "A",<br>    "box": {<br>      "landmark": [ <br>        315.33056640625,<br>        395.97271728515625,<br>        509.1438293457031,<br>        382.5447692871094,<br>        402.6089172363281,<br>        496.8799133300781,<br>        341.49383544921875,<br>        597.4930419921875,<br>        504.7567138671875,<br>        585.8673706054688<br>      ],<br>      "topLeftX": 215,<br>      "topLeftY": 181,<br>      "faceWidth": 436,<br>      "faceHeight": 561<br>    },<br>    "face_score": 1.0,<br>    "expression": "smile",<br>    "expression_score": 0.932392954826355, <br>    "age": 25,<br>    "gender": "female", <br>    "attribute": "normal",<br>    "image_width": 900, <br>    "image_height": 1350, <br>    "engine_version": 390 <br>  }<br>] |
 
 <br>
