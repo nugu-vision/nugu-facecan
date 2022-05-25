@@ -179,6 +179,57 @@ API 의 요청 명령과 결과는 다음과 같이 확인할 수 있습니다.
 
 여기까지 사용자 DB를 만드는 과정과 얼굴인식을 수행하는 과정에 사용하는 API 와 개략적인 구조를 살펴보았습니다. curl 명령에 있는 POST/header/form 등은 어느 언어를 사용하든 동일한 인터페이스를 사용하기 때문에 이를 참조하여 진행하면 됩니다. 실제 서비스는 영상을 촬영하는 방식을 결정/구현해야 하고, 자료구조를 어떻게 결정하는 것이 활용에 편의성이 있을지 많은 검토가 필요합니다. 
 
-중간에 문의 사항이나 구현 상의 어려움이 있다면 [SK OpenAPI 사용자 문의](https://openapi.sk.com) 에 연락주시기 바랍니다.
+<br>
 
-감사합니다. 
+> ## 얼굴검출 기능의 사용
+
+<br>
+
+위 내용에서 얼굴인식에 필요한 전체 과정을 살펴 보았습니다. 본 내용에서는 얼굴의 위치, 얼굴 점수, 나이, 성별, 표정, 속성 정보를 얻을 수 있는 얼굴검출 API 호출과 관련된 내용을 소개해 드립니다. 
+
+얼굴인식의 경우 얼굴 등록 과정이 필요하였지만 얼굴검출은 이런 과정이 별도로 필요하지 않으며 인식 하려고 하는 이미지를 단순히 호출함으로써 원하는 정보를 얻을수 있습니다. 본 API를 통해서 얻을수 있는 정보는 얼굴의 위치, 얼굴 점수, 나이, 성별, 표정, 속성으로 해당 정보에 대한 상세 내용은 아래 표를 참고하시면 됩니다.
+
+|항목|type|class/범위|설명|
+|---|---|---|---|
+|얼굴 위치(face_box)|int|좌표정보|영상내에서 얼굴이 위치한 x,y,w,h정보|
+|얼굴 점수(face_score)|float|0~1|얼굴 위치에서 확인된 얼굴이 실제 얼굴인지 여부를 알려주는 값. 1에 가까울수록 얼굴일 확률이 높고 0에 가까울수록 얼굴이 아닐 확률이 높음|
+|나이(age)|int|0~100|사진을 통해 유추한 나이 (apparent age)|
+|성별(gender)|str|unknown, male, female|성별 정보로 남자는 male, 여자는 female, 성별 판단이 어려운 경우 unknown으로 전달, 아이의 경우 unknown으로 전달|
+|표정(expression)|str|neutral, smile, sad, surprise, fear, angry, etc|인간의 기본적인 6가지 감정을 토대로 top-1 표정 결과를 전달|
+|표정 점수(expression_score)|float|0~1|top-1 표정의 confidence 값, 1에 가까울수록 해당 표정일 확률이 높음|
+|속성(attribute)|str|normal, glasses, sunglasses, mask, occlusion, blur, not-face, profile-face	|얼굴에 포함된 다양한 속성 정보 중 top-1 속성을 전달. normal은 얼굴인식하기에 적합한 얼굴 상황을 의미하고, glasses는 안경을 착용한 상황, sunglasses는 선글라스를 착용한 상황, mask는 마스크를 착용한 상황으로 인식한 것입니다. occlusion은 얼굴을 가리는 요소가 있는 상황, blur는 얼굴이 흐리게 촬영되어 선명하지 않은 상황, not-face는 검출한 얼굴 위치가 실제로 얼굴이 아닐수 있는 상황이며, profile-face는 얼굴의 옆모습이 촬영된 상황을 의미합니다.|
+|속성 점수(attribute_score)|float|0~1|top-1 속성의 confidence 값, 1에 가까울수록 해당 속성일 확률이 높음|
+
+
+얼굴검출 API 의 요청 명령과 결과는 다음과 같이 확인할 수 있습니다. 헤더에는 인증을 위한 appKey와 app-id 만을 필요로 하며 group-id는 정보는 필요하지 않습니다.
+
+
+|Category|Contents|
+|---|---|
+|Request| curl --location <br> --request POST 'https://apis.openapi.sk.com/nugufacecan/v1/detect' <br> --header 'appKey: l7xx4bfa60c6bc8945819a114c5e34cc930c' <br> --header 'app-id: GZ0E4G4YI1' <br> --form 'image=@"A_Face_3.jpg"' |
+|Response| 200 OK <pre>{ <br>    "faces": [ <br>     { <br>         "face_box": { <br>             "topLeftX": 221, <br>             "topLeftY": 68 <br>             "faceWidth": 141,<br>             "faceHeight": 188,<br>             "landmark": [ <br>                 242,<br>                 141, <br>                 302, <br>                 144, <br>                 258, <br>                 178,<br>                 246, <br>                 212, <br>                 292, <br>                 214  <br>            ], <br>            <br>        },<br>        "face_score": 1,<br>        "expression": "smile",<br>        "expression_score": 0.99242282,<br>        "expression_raw" : {"fear":0.00076446,"surprised":0.00136445,"neutral":0.00577636,"etc":0.00240371,"angry":0.00093386,"smile":0.99242282,"sad":0.00126539},<br>        "age": 53,<br>        "gender": "male",<br>        "attribute": "normal"<br>    },<br>    {<br>        "face_box": { <br>            "topLeftX": 102,<br>            "faceHeight": 69,<br>            "topLeftY": 86,<br>            "landmark": [<br>                133,<br>                106,<br>                137,<br>                106,<br>                147,<br>                120,<br>                136,<br>                136,<br>                139,<br>                137<br>            ],<br>            "faceWidth": 46<br>        },<br>        "face_score": 0.0000022367917154042516,<br>        "expression": "smile",<br>        "expression_score": 0.99242282,<br>        "expression_raw" : {"fear":0.00076446,"surprised":0.00136445,"neutral":0.00577636,"etc":0.00240371,"angry":0.00093386,"smile":0.99242282,"sad":0.00126539},<br>        "age": 32,<br>        "gender": "male",<br>        "attribute": "not-face"<br>    },<br>    {<br>        "face_box": {<br>            "topLeftX": 479,<br>            "faceHeight": 38,<br>            "topLeftY": 134,<br>            "landmark": [<br>                503,<br>                150,<br>                507,<br>                152,<br>                504,<br>                162,<br>                492,<br>                164,<br>                495,<br>                166<br>            ],<br>            "faceWidth": 34<br>        },<br>        "face_score": 0.000002017891347350087,<br>        "expression": "smile",<br>        "expression_score": 0.99242282,<br>        "expression_raw" : {"fear":0.00076446,"surprised":0.00136445,"neutral":0.00577636,"etc":0.00240371,"angry":0.00093386,"smile":0.99242282,"sad":0.00126539},<br>        "age": 32,<br>        "gender": "unknown",<br>        "attribute": "not-face"<br>    },<br>    {<br>        "face_box": {<br>            "topLeftX": 603,<br>            "faceHeight": 41,<br>            "topLeftY": 138,<br>            "landmark": [<br>                614,<br>                153,<br>                628,<br>                152,<br>                622,<br>                162,<br>                617,<br>                170,<br>                627,<br>                170<br>            ],<br>            "faceWidth": 31 <br>        },<br>        "face_score": 0.00009834803495323285,<br>        "expression": "smile",<br>        "expression_score": 0.99242282,<br>        "expression_raw" : {"fear":0.00076446,"surprised":0.00136445,"neutral":0.00577636,"etc":0.00240371,"angry":0.00093386,"smile":0.99242282,"sad":0.00126539},<br>        "age": 36,<br>        "gender": "female",<br>        "attribute": "not-face"<br>    }<br>    ],<br>    "image_width": 620,<br>    "image_height": 930,<br>    "transaction_id": "G00002712CDU"<br>}</pre>
+
+<br>
+
+> ## 얼굴랜드마크 기능의 사용
+
+<br>
+
+본 내용에서는 얼굴랜드마크 API 기능 및 사용법을 설명합니다. 얼굴검출 API와 얼굴랜드마크 API는 대부분 비슷하지만 얼굴의 랜드마크 정보를 더 자세하게 제공하는 점에서 차이가 있습니다. 얼굴랜드마크API는 기본적으로 얼굴검출 API에서 제공하는 얼굴의 위치, 얼굴 점수, 나이, 성별, 표정, 속성 정보를 제공하면서 전체 68개의 얼굴랜드마크 정보를 추가로 제공합니다. 이는 얼굴검출 API에서 제공하는 얼굴랜드마크 5개 점보다 더 상세하고 정확한 정보입니다. 얼굴랜드마크 68개 점의 구체적인 정보는 아래 사진을 참고해 주시기 바랍니다.([Fig 3.](#fig_3))
+
+<p /><a name="fig_3">Fig. 3</a> Face Landmark 위치 정보
+<p /><img src="figures/fig3.landmark.points.jpg">
+
+<br>
+
+
+얼굴랜드마크 API 의 요청 명령과 결과는 다음과 같이 확인할 수 있습니다. 헤더에는 인증을 위한 appKey와 app-id 만을 필요로 하며 group-id는 정보는 필요하지 않습니다.
+
+|Category|Contents|
+|---|---|
+|Request| curl --location <br> --request POST 'https://apis.openapi.sk.com/nugufacecan/v1/landmark' <br> --header 'appKey: l7xx4bfa60c6bc8945819a114c5e34cc930c' <br> --header 'app-id: GZ0E4G4YI1' <br> --form 'image=@"A_Face_3.jpg"' |
+|Response| 200 OK <pre>{<br>    "faces": [<br>        {<br>            "face_box": {<br>                "topLeftX": 194,{<br>                "topLeftY": 77,{<br>                "faceWidth": 229,{<br>                "faceHeight": 313{<br>            },<br>            "face_landmark": [<br>                [189.69,214.37],<br>                [194.09,249.9],<br>                [202.2,284.83],<br>                [215.81,317.94],<br>                [237.28,346],<br>                [266.32,366.26],<br>                [299.08,379.85],<br>                [333.98,388.09],<br>                [368.75,385.18],<br>                [390.02,368.52],<br>                [401.58,344.22],<br>                [410.99,318.63],<br>                [417.02,292.28],<br>                [421.04,266.07],<br>                [422.1,239.61],<br>                [417.52,214.28],<br>                [411.32,190.26],<br>                [240.61,182.49],<br>                [256.92,171.7],<br>                [276.35,166.04],<br>                [297.02,165.91],<br>                [316.83,169.68],<br>                [363.05,168.24],<br>                [373.59,161.82],<br>                [385.65,157.4],<br>                [397.77,157],<br>                [407.4,161.52],<br>                [345.58,196.95],<br>                [352.44,214.25],<br>                [359.66,231.37],<br>                [366.69,248.35],<br>                [339.73,274.11],<br>                [352.67,272.29],<br>                [362.87,272.68],<br>                [370.45,269.57],<br>                [377.64,268.44],<br>                [264.17,210.68],<br>                [273.68,202.83],<br>                [302.3,199.61],<br>                [312.58,209.46],<br>                [301,214.06],<br>                [273.97,214.62],<br>                [365.19,204.36],<br>                [371.99,194.36],<br>                [394.6,191.63],<br>                [401.63,197.95],<br>                [395.85,203.74],<br>                [375.38,206.98],<br>                [318.03,321.53],<br>                [331.82,310.96],<br>                [348.42,301],<br>                [360.29,298.16],<br>                [371.43,297.05],<br>                [383.17,303.53],<br>                [388.09,313.1],<br>                [384.92,324.21],<br>                [376.8,334.46],<br>                [363.05,339.37],<br>                [345.33,337.6],<br>                [329.87,330.24],<br>                [324.08,320.77],<br>                [340.26,313.79],<br>                [359.68,309.51],<br>                [374.23,308.44],<br>                [384.15,313.46],<br>                [375.34,318.85],<br>                [361.17,322.85],<br>                [341.12,323.46]<br>            ],<br>            "face_score": 1,<br>            "expression": { <br>              "neutral": 0.99178928,<br>              "smile": 0.00136275,<br>              "sad": 0.00093973,<br>              "surprised": 0.00248117,<br>              "fear": 0.00110723,<br>              "angry": 0.00117349,<br>              "etc": 0.00170181 <br>            },<br>            "age": 24,<br>            "gender": "female",<br>            "attribute": "normal"<br>        }<br>    ],<br>    "image_width": 540,<br>    "image_height": 577,<br>    "transaction_id": "X00003C905AW"<br>}</pre>|
+
+여기까지 얼굴 인식/검출/랜드마크 API를 활용하는 방법을 알아 보았습니다. 중간에 문의 사항이나 구현 상의 어려움이 있다면 [SK OpenAPI 사용자 문의](https://openapi.sk.com) 에 연락주시기 바랍니다.
+
+감사합니다.
