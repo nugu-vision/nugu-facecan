@@ -196,9 +196,9 @@ API 의 요청 명령과 결과는 다음과 같이 확인할 수 있습니다.
 |나이(age)|int|0~100|사진을 통해 유추한 나이 (apparent age)|
 |성별(gender)|str|unknown, male, female|성별 정보로 남자는 male, 여자는 female, 성별 판단이 어려운 경우 unknown으로 전달, 아이의 경우 unknown으로 전달|
 |표정(expression)|str|neutral, smile, sad, surprise, fear, angry, etc|인간의 기본적인 6가지 감정을 토대로 top-1 표정 결과를 전달|
-|표정 스코어(expression_score)|float|0~1|top-1 표정의 confidence 값, 1에 가까울수록 해당 표정일 확률이 높음|
+|표정 점수(expression_score)|float|0~1|top-1 표정의 confidence 값, 1에 가까울수록 해당 표정일 확률이 높음|
 |속성(attribute)|str|normal, glasses, sunglasses, mask, occlusion, blur, not-face, profile-face	|얼굴에 포함된 다양한 속성 정보 중 top-1 속성을 전달. normal은 얼굴인식하기에 적합한 얼굴 상황을 의미하고, glasses는 안경을 착용한 상황, sunglasses는 선글라스를 착용한 상황, mask는 마스크를 착용한 상황으로 인식한 것입니다. occlusion은 얼굴을 가리는 요소가 있는 상황, blur는 얼굴이 흐리게 촬영되어 선명하지 않은 상황, not-face는 검출한 얼굴 위치가 실제로 얼굴이 아닐수 있는 상황이며, profile-face는 얼굴의 옆모습이 촬영된 상황을 의미합니다.|
-|속성 스코어(attribute_score)|float|0~1|top-1 속성의 confidence 값, 1에 가까울수록 해당 속성일 확률이 높음|
+|속성 점수(attribute_score)|float|0~1|top-1 속성의 confidence 값, 1에 가까울수록 해당 속성일 확률이 높음|
 
 
 얼굴검출 API 의 요청 명령과 결과는 다음과 같이 확인할 수 있습니다. 헤더에는 인증을 위한 appKey와 app-id 만을 필요로 하며 group-id는 정보는 필요하지 않습니다.
